@@ -1,5 +1,5 @@
 <template>
-  <div class="xm-center">
+  <div>
     <xm-carousel />
   </div>
 </template>
