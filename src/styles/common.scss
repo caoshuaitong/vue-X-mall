@@ -1,0 +1,25 @@
+.xm-center {
+    width: 1280px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.flex {
+    display: flex;
+}
+
+.icon-user {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: url(~@/assets/icon.png) -155px 0;
+    background-size: 240px 107px;
+}
+
+.icon-cart {
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    background: url(~@/assets/icon.png) 0 -22px;
+    background-position: -150px -22px;
+}
