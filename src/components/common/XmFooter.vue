@@ -1,0 +1,75 @@
+<template>
+  <div>
+    <div class="footer-container xm-center">
+      <div class="footer-left">
+        <ul v-for="item in list" :key="item.id">
+          <li>{{item.title}}</li>
+          <li v-for="content in item.desc" :key="content.id">{{content}}</li>
+        </ul>
+      </div>
+      <div class="footer-right">
+        <div>1012139570</div>
+        <div>周一至周日 10:00-23:00（限Starrer或捐赠人联系）</div>
+        <Button @click="warning(false)">在线帮助</Button>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "XmFooter",
+  props: {},
+  data() {
+    return {
+      list: [
+        { title: "订单服务", desc: ["购买指南", "支付方式", "送货政策"] },
+        { title: "服务支持", desc: ["官方开源", "项目前端", "项目后端"] },
+        { title: "自助服务", desc: ["个人博客", "个人简介", "个人视频"] },
+        { title: "其他项目", desc: ["XPay支付系统", "数据共享", "待开发..."] },
+        { title: "友情链接", desc: ["宇cccc", "Smartisan", "Vue"] },
+        { title: "关注我吧", desc: ["腾讯 QQ", "新浪微博", "官方邮箱"] }
+      ]
+    };
+  },
+  computed: {},
+  created() {},
+  mounted() {},
+  watch: {},
+  methods: {
+    warning(nodesc) {
+      this.$Notice.warning({
+        title: "离线帮助",
+        desc: nodesc ? "" : "没人帮助你，请自己靠自己 "
+      });
+    }
+  },
+  components: {},
+  filters: {}
+};
+</script>
+
+<style scoped lang="scss">
+.footer-container {
+  margin-top: 60px;
+  display: flex;
+  justify-content: space-between;
+  height: 350px;
+  .footer-left {
+    display: flex;
+    ul {
+      line-height: 1.6;
+
+      width: 150px;
+      text-align: center;
+      font-size: 12px;
+      li {
+        padding: 6px 0;
+      }
+    }
+  }
+  .footer-right {
+    text-align: right;
+  }
+}
+</style>

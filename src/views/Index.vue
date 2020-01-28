@@ -1,24 +1,40 @@
 <template>
   <div>
-    <xm-carousel />
+    <xm-carousel :panelContents="data[0].panelContents" />
+    <xm-active :activeList="data[1].panelContents" />
   </div>
 </template>
 
 <script>
 import xmCarousel from "../components/index/XmCarousel";
+import xmActive from "../components/index/XmActive";
 export default {
   name: "Index",
   props: {},
   data() {
-    return {};
+    return {
+      data: [{}, {}, {}, {}, {}, {}, {}]
+    };
   },
   computed: {},
   created() {},
-  mounted() {},
+  mounted() {
+    this.getHomeData();
+  },
   watch: {},
-  methods: {},
+  methods: {
+    getHomeData() {
+      this.$api.getHome().then(res => {
+        if (res.code === 200) {
+          this.data = res.data;
+          console.log(res.data);
+        }
+      });
+    }
+  },
   components: {
-    xmCarousel
+    xmCarousel,
+    xmActive
   }
 };
 </script>

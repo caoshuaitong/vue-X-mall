@@ -5,17 +5,38 @@
         <div>
           <i class="logo"></i>
         </div>
-        <div>
-          <Input suffix="ios-search" placeholder="Enter text" style="width: auto" />
-        </div>
-        <div>全部商品</div>
-        <div>捐赠</div>
-        <div ref="control" class="header-control flex">
-          <div>
-            <i class="icon-user"></i>
+        <div class="header-search">
+          <Input
+            suffix="ios-search"
+            v-model="keyword"
+            @on-change="search(keyword)"
+            @on-blur="onBlur"
+            @on-focus="show=true"
+            placeholder="请输入商品信息"
+            style="width: auto"
+          />
+          <div class="search-result" v-if="searchList.length>0&&show">
+            <div
+              v-for="item in searchList"
+              :key="item.id"
+              @click="godetail(item.productId)"
+            >{{ item.productName }}</div>
           </div>
-          <div>
-            <i class="icon-cart"></i>
+        </div>
+        <div class="header-link-box">
+          <div class="top-link"  @click="jump('/goods')">全部商品</div>
+          <div class="top-link" @click="jump('')">捐赠</div>
+          <div>|</div>
+        </div>
+        <div ref="control" class="header-control flex">
+          <div class="icon">
+            <Poptip trigger="hover" title="Title" content="content">
+              <i class="iconfont icon-yonghu"></i>
+            </Poptip>
+          </div>
+          <div class="icon">
+            <i class="iconfont icon-gouwuche"></i>
+            <div class="cart-num">{{cartNum}}</div>
           </div>
         </div>
       </div>
@@ -84,16 +105,23 @@ export default {
           path: ""
         }
       ],
-      flag: false
+      flag: false,
+      searchList: [],
+      keyword: "",
+      show: false
     };
   },
-  computed: {},
+  computed: {
+    cartNum() {
+      if (localStorage.getItem("shopcart")) return count.length;
+      else return 0;
+    }
+  },
   created() {},
   mounted() {
     window.addEventListener("scroll", () => {
       let scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop;
-      console.log(scrollTop);
       if (scrollTop > 100) {
         this.flag = true;
         this.$refs.headerBottom.append(this.$refs.control);
@@ -115,6 +143,25 @@ export default {
       } else {
         this.$Message.error("功能开发中！敬请期待");
       }
+    },
+    search(keyword) {
+      if (keyword !== "") {
+        this.$api.searchKeyword(keyword).then(res => {
+          if (res.code === 200) {
+            this.searchList = res.data;
+          }
+        });
+      } else {
+        this.searchList = [];
+      }
+    },
+    godetail(id) {
+      this.$router.push({ name: "detail", params: { id: id } });
+    },
+    onBlur() {
+      setTimeout(() => {
+        this.show = false;
+      }, 200);
     }
   },
   components: {}
@@ -138,11 +185,46 @@ export default {
         height: 40px;
         background-position: 0 0;
       }
+      .header-search {
+        position: relative;
+        left: 40%;
+        margin-top: 5px;
+        /deep/.ivu-input {
+          width: 258px;
+          height: 30px;
+        }
+        .search-result {
+          position: absolute;
+          background: white;
+          width: 258px;
+          padding: 10px;
+          border-radius: 5px;
+          z-index: 99;
+          border: 1px solid gray;
+        }
+      }
       .header-control {
+        height: 40px;
+      }
+      .header-link-box {
         position: absolute;
-        right: 0;
-        height: 20px;
-        padding: 10px;
+        right: 150px;
+        display: flex;
+        :nth-last-child(1) {
+          line-height: 40px;
+        }
+      }
+      .top-link {
+        width: 110px;
+        color: #c8c8c8;
+        display: block;
+        font-size: 14px;
+        line-height: 40px;
+        padding: 0 25px;
+        cursor: pointer;
+      }
+      .top-link:hover {
+        color: white;
       }
     }
   }
@@ -157,13 +239,13 @@ export default {
     position: fixed;
     top: 0;
     .header-bottom-box {
-      padding: 16px 0;
-      .header-control {
-        position: absolute;
-        right: 0;
-        height: 20px;
-        padding: 4px;
+      padding: 10px 0;
+      .icon:hover {
+        color: black;
       }
+    }
+    .nav-each {
+      line-height: 40px !important;
     }
   }
   .header-bottom {
@@ -181,6 +263,43 @@ export default {
       .nav-weight {
         font-weight: 700;
       }
+    }
+  }
+  .header-control {
+    position: absolute;
+    right: 0;
+    height: 20px;
+    .icon {
+      padding-top: 6px;
+      // overflow: hidden;
+      margin-left: 50px;
+      color: #999999;
+      cursor: pointer;
+    }
+    .icon:hover {
+      color: white;
+    }
+    .icon-yonghu {
+      font-size: 20px;
+      line-height: 28px;
+    }
+    .icon-gouwuche {
+      font-size: 22px;
+      line-height: 28px;
+      margin-right: 10px;
+    }
+    .cart-num {
+      overflow: hidden;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      border-radius: 50%;
+      color: white;
+      background: #969696 !important;
+      background-image: linear-gradient(#a4a4a4, #909090);
+      box-shadow: inset 0 0 1px #838383, 0 1px 2px #838383;
     }
   }
 }

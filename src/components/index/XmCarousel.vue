@@ -7,7 +7,7 @@
       ref="carousel"
       class="carousel"
     >
-      <Carousel v-model="value" :height="500" loop radius-dot>
+      <Carousel v-model="value" :height="500" loop radius-dot @on-click="godetail">
         <CarouselItem v-for="item in panelContents" :key="item.id">
           <img class="picUrl" :src="item.picUrl" alt />
           <img class="picUrl2" :src="item.picUrl2" alt />
@@ -21,10 +21,14 @@
 <script>
 export default {
   name: "XmCarousel",
-  props: {},
+  props: {
+    panelContents: {
+      type: Array,
+      default: () => []
+    }
+  },
   data() {
     return {
-      panelContents: [],
       value: 0,
       option: {
         offsetLeft: 0,
@@ -36,19 +40,9 @@ export default {
   },
   computed: {},
   created() {},
-  mounted() {
-    this.getHomeData();
-  },
+  mounted() {},
   watch: {},
   methods: {
-    getHomeData() {
-      this.$api.getHome().then(res => {
-        if (res.code === 200) {
-          this.panelContents = res.data[0].panelContents;
-          console.log(this.panelContents);
-        }
-      });
-    },
     //鼠标移入获取当前dom的状态
     Over(dom) {
       this.option = {
@@ -60,16 +54,19 @@ export default {
     },
     //操作dom元素
     Move(dom, eve) {
-      let X, Y;
       let mouseX = eve.pageX - this.option.offsetLeft;
       let mouseY = eve.pageY - this.option.offsetTop;
-      X = mouseX - this.option.offsetWidth / 2;
-      Y = this.option.offsetHeight / 2 - mouseY;
+      let X = mouseX - this.option.offsetWidth / 2;
+      let Y = this.option.offsetHeight / 2 - mouseY;
       dom.style.transform = `rotateY(${X / 50}deg) rotateX(${Y / 50}deg)`;
     },
     //鼠标移出还原dom元素状态
     Out(dom) {
       dom.style.transform = "rotateY(0deg) rotateX(0deg)";
+    },
+    godetail(index) {
+      let id = this.panelContents[index].productId;
+      this.$router.push({ name: "detail", params: { id: id } });
     }
   },
   components: {}
@@ -78,7 +75,7 @@ export default {
 
 <style scoped lang="scss">
 .box {
-  perspective: 1000px;
+  perspective: 3000px;
 }
 .carousel {
   position: relative;
@@ -120,10 +117,12 @@ export default {
   .picUrl2 {
     position: absolute;
     width: 100%;
+    transform: translateZ(40px);
   }
   .picUrl3 {
     position: absolute;
     width: 100%;
+    transform: translateZ(30px);
   }
 }
 </style>
