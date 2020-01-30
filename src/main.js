@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import './global/'
 //引入dayjs
 import dayjs from 'dayjs'
 //引入axios
@@ -13,6 +14,8 @@ import 'view-design/dist/styles/iview.css';
 //引入接口文档
 import api from './http/api'
 Vue.prototype.$api = api
+
+//引入全局js
 
 Vue.config.productionTip = false
 Vue.prototype.$dayjs = dayjs

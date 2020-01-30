@@ -24,7 +24,7 @@
           </div>
         </div>
         <div class="header-link-box">
-          <div class="top-link"  @click="jump('/goods')">全部商品</div>
+          <div class="top-link" @click="jump('/goods')">全部商品</div>
           <div class="top-link" @click="jump('')">捐赠</div>
           <div>|</div>
         </div>
@@ -36,7 +36,7 @@
           </div>
           <div class="icon">
             <i class="iconfont icon-gouwuche"></i>
-            <div class="cart-num">{{cartNum}}</div>
+            <div class="cart-num" :class="cartNum>0?'cart-num-red':''">{{cartNum}}</div>
           </div>
         </div>
       </div>
@@ -113,8 +113,7 @@ export default {
   },
   computed: {
     cartNum() {
-      if (localStorage.getItem("shopcart")) return count.length;
-      else return 0;
+      return this.$store.state.cartNum;
     }
   },
   created() {},
@@ -297,9 +296,15 @@ export default {
       text-align: center;
       border-radius: 50%;
       color: white;
-      background: #969696 !important;
+      background: #969696;
       background-image: linear-gradient(#a4a4a4, #909090);
       box-shadow: inset 0 0 1px #838383, 0 1px 2px #838383;
+    }
+    .cart-num-red {
+      background: #eb746b;
+      background-image: linear-gradient(#eb746b, #e25147);
+      box-shadow: inset 0 0 1px hsla(0, 0%, 100%, 0.15),
+        0 1px 2px hsla(0, 0%, 100%, 0.15);
     }
   }
 }

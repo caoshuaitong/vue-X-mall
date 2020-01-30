@@ -1,7 +1,7 @@
 <template>
   <div class="xm-center flex">
     <div class="active-box" v-for="item in activeList" :key="item.id">
-      <div class="active-each" @click="godetail(item.productId)">
+      <div class="active-each" @click="$godetail(item.productId)">
         <div class="active-shadow"></div>
         <img :src="item.picUrl" alt />
       </div>
@@ -23,15 +23,9 @@ export default {
   },
   computed: {},
   created() {},
-  mounted() {
-    console.log(this.activeList);
-  },
+  mounted() {},
   watch: {},
-  methods: {
-    godetail(id) {
-      this.$router.push({ name: "detail", params: { id: id } });
-    }
-  },
+  methods: {},
   components: {},
   filters: {}
 };

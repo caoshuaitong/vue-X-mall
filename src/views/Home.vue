@@ -19,7 +19,9 @@ export default {
     xmFooter
   },
   methods: {},
-  mounted() {},
+  mounted() {
+    this.$store.dispatch("getCart");
+  },
   watch: {},
   computed: {}
 };

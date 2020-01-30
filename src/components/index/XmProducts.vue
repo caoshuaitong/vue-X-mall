@@ -3,22 +3,18 @@
     <div class="title">{{title}}</div>
     <div class="box">
       <div v-for="(item,index) in list" :key="item.id">
-        <div v-if="index===0" class="pro-first">
+        <div v-if="index===0" class="pro-first" @click="$godetail(item.productId)">
           <div class="first-shadow"></div>
           <img :src="item.picUrl" alt />
         </div>
-        <div v-else class="pro-each">
-          <img :src="item.picUrl" alt />
-          <div class="pro-name">{{item.productName}}</div>
-          <div class="pro-sub">{{item.subTitle}}</div>
-          <div class="pro-price">￥{{item.salePrice.toFixed(2)}}</div>
-        </div>
+        <goodBox v-else :item="item" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import goodBox from "../common/XmGoodBox";
 export default {
   name: "XmProducts",
   props: {
@@ -39,7 +35,9 @@ export default {
   mounted() {},
   watch: {},
   methods: {},
-  components: {},
+  components: {
+    goodBox
+  },
   filters: {}
 };
 </script>
@@ -87,38 +85,5 @@ export default {
   .first-shadow:hover {
     background: rgba(0, 0, 0, 0.04);
   }
-}
-.pro-each {
-  float: left;
-  background: white;
-  width: 25%;
-  height: 430px;
-  overflow-y: hidden;
-  transition: all 0.5s linear;
-  text-align: center;
-  cursor: pointer;
-  img {
-    overflow: hidden;
-    margin: 50px auto 10px;
-    width: 206px;
-    height: 206px;
-    display: block;
-  }
-  .pro-name {
-    line-height: 1.2;
-    font-size: 16px;
-    color: #424242;
-    padding: 10px 0;
-  }
-  .pro-sub {
-    line-height: 1.2;
-    font-size: 12px;
-    color: #d0d0d0;
-    padding: 16px 0;
-  }
-}
-.pro-each:hover {
-  transform: translateY(-3px);
-  box-shadow: 1px 1px 20px #999;
 }
 </style>

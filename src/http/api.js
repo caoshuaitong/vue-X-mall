@@ -33,7 +33,7 @@ export default {
     // 4.priceGt: 价格区间 从多少开始
     // 5.priceLte: 价格区间 到哪结束
     // ```
-    GetallGoods(page = 1, size = 10, sort = 1, priceGt, priceLte) {
+    GetallGoods(page = 1, size = 20, sort, priceGt, priceLte) {
         return service.get(
             '/goods/allGoods', {
                 params: {
@@ -127,7 +127,7 @@ export default {
     // ### 查询购物车
 
     // ``` js
-    // http://localhost:9999/goods/getCarts
+    // http://localhost:9999/goods/getCart
     // ```
     getCarts() {
         return service.get(
@@ -159,7 +159,7 @@ export default {
     // 2.count: 数量
     // ```
     editCart(productId, count) {
-        return service.post(
+        return service.get(
             '/goods/editCart', {
                 productId,
                 count
