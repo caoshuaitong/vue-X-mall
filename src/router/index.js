@@ -73,31 +73,30 @@ const routes = [{
     {
         //登录
         path: '/login',
-        component: Home,
-        children: [{
-            path: '',
-            name: 'login',
-            component: () =>
-                import ('../views/Login')
-        }]
+        name: 'login',
+        component: () =>
+            import ('../views/Login')
+
     },
     {
         //注册
         path: '/register',
-        component: Home,
-        children: [{
-            path: '',
-            name: 'register',
-            component: () =>
-                import ('../views/Register')
-        }]
+        name: 'register',
+        component: () =>
+            import ('../views/Register')
     },
 ]
 
 const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
-    routes
+    routes,
+    scrollBehavior(to, from, savedPosition) {
+        return {
+            x: 0,
+            y: 0
+        }
+    }
 })
 
 export default router

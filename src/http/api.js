@@ -69,13 +69,9 @@ export default {
     // 参数:
     // productId: 商品id
     // ```
-    searchId(id) {
+    searchId(productId) {
         return service.get(
-            '/goods/search', {
-                params: {
-                    id
-                }
-            })
+            `/goods/detail?productId=${productId}`)
     },
 
     // ### 登陆

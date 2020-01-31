@@ -30,9 +30,9 @@
         </div>
         <div ref="control" class="header-control flex">
           <div class="icon">
-            <Poptip trigger="hover" title="Title" content="content">
-              <i class="iconfont icon-yonghu"></i>
-            </Poptip>
+            <!-- <Poptip trigger="hover" title="Title" content="content"> -->
+            <i class="iconfont icon-yonghu" @click="getUser"></i>
+            <!-- </Poptip> -->
           </div>
           <div class="icon">
             <i class="iconfont icon-gouwuche"></i>
@@ -41,6 +41,7 @@
         </div>
       </div>
     </div>
+    <div v-if="flag" style="height:60px;"></div>
     <div :class="flag?'inFixed':'inTop'" class="header-bottom">
       <div ref="headerBottom" class="header-bottom-box flex xm-center">
         <ul class="header-nav flex">
@@ -118,31 +119,39 @@ export default {
   },
   created() {},
   mounted() {
+    //监听scroll
     window.addEventListener("scroll", () => {
       let scrollTop =
         document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop > 100) {
         this.flag = true;
-        this.$refs.headerBottom.append(this.$refs.control);
       } else {
         this.flag = false;
-        this.$refs.headerTop.append(this.$refs.control);
       }
     });
   },
-  watch: {},
+  watch: {
+    //判断flag状态改变control元素的位置
+    flag(val) {
+      if (val) {
+        this.$refs.headerBottom.append(this.$refs.control);
+      } else {
+        this.$refs.headerTop.append(this.$refs.control);
+      }
+    }
+  },
   methods: {
+    //导航栏跳转
     jump(item) {
       if (item !== "") {
-        if (item === this.$route.path) {
-          // this.$router.go(0);
-        } else {
+        if (item !== this.$route.path) {
           this.$router.push(item);
         }
       } else {
         this.$Message.error("功能开发中！敬请期待");
       }
     },
+    //搜索
     search(keyword) {
       if (keyword !== "") {
         this.$api.searchKeyword(keyword).then(res => {
@@ -154,13 +163,27 @@ export default {
         this.searchList = [];
       }
     },
+    //搜索跳转
     godetail(id) {
+      if (this.$route.params) {
+        setTimeout(() => {
+          this.$router.go(0);
+        }, 20);
+      }
       this.$router.push({ name: "detail", params: { id: id } });
     },
+    //搜索失去焦点
     onBlur() {
       setTimeout(() => {
         this.show = false;
       }, 200);
+    },
+    getUser() {
+      console.log(1);
+      if (localStorage.getItem("user")) {
+      } else {
+        this.$router.push("/login");
+      }
     }
   },
   components: {}
@@ -245,6 +268,17 @@ export default {
     }
     .nav-each {
       line-height: 40px !important;
+    }
+    .header-control {
+      animation: enter 0.5s;
+      @keyframes enter {
+        from {
+          transform: translateY(-60px);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
     }
   }
   .header-bottom {
