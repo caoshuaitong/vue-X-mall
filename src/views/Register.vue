@@ -118,13 +118,6 @@ export default {
       });
     },
     changeData() {
-      console.log(
-        this.username,
-        this.passwd,
-        this.repasswd,
-        this.flag,
-        this.checkVaptcha
-      );
       if (
         this.username !== "" &&
         this.passwd !== "" &&
@@ -139,13 +132,7 @@ export default {
     },
     //提交
     submit() {
-      if (
-        this.username !== "" &&
-        this.passwd !== "" &&
-        this.repasswd !== "" &&
-        this.checked &&
-        this.checkVaptcha
-      ) {
+      if (this.flag) {
         let userCheck = /^[a-zA-Z0-9_-]{4,16}$/;
         let passCheck = /^[a-zA-Z0-9_-]{4,16}$/;
         if (!userCheck.test(this.username)) {

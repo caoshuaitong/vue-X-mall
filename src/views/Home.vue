@@ -20,6 +20,9 @@ export default {
   },
   methods: {},
   mounted() {
+    if (localStorage.getItem("username")) {
+      this.$store.state.username = localStorage.getItem("username");
+    }
     this.$store.dispatch("getCart");
   },
   watch: {},

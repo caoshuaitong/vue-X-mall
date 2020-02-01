@@ -35,6 +35,7 @@ export default {
       this.$api.addCart(productId).then(res => {
         if (res.code === 200) {
           this.$store.dispatch("getCart");
+          this.$store.state.showCart = true;
         }
       });
     }

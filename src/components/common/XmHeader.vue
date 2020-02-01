@@ -3,7 +3,9 @@
     <div class="header-top">
       <div ref="headerTop" class="xm-center header-top-box flex">
         <div>
-          <i class="logo"></i>
+          <a href="/" title="XMall商城官网">
+            <i class="logo"></i>
+          </a>
         </div>
         <div class="header-search">
           <Input
@@ -30,13 +32,26 @@
         </div>
         <div ref="control" class="header-control flex">
           <div class="icon">
-            <!-- <Poptip trigger="hover" title="Title" content="content"> -->
             <i class="iconfont icon-yonghu" @click="getUser"></i>
-            <!-- </Poptip> -->
+            <div v-if="username!==''" class="header-userinfo">
+              <div class="userinfo-img">
+                <img src="../../assets/logo.png" alt />
+              </div>
+              <div class="userinfo-name">{{username}}</div>
+              <ul>
+                <li
+                  class="userinfo-menu"
+                  v-for="item in usercontorl"
+                  :key="item.id"
+                  @click="contorl(item.path)"
+                >{{item.title}}</li>
+              </ul>
+            </div>
           </div>
-          <div class="icon">
+          <div class="icon" @mouseenter="showCart(true)" @mouseleave="showCart(false)">
             <i class="iconfont icon-gouwuche"></i>
             <div class="cart-num" :class="cartNum>0?'cart-num-red':''">{{cartNum}}</div>
+            <shopCart v-show="show" class="header-cart" />
           </div>
         </div>
       </div>
@@ -59,6 +74,7 @@
 </template>
 
 <script>
+import shopCart from "./XmShopCart";
 export default {
   name: "XmHeader",
   props: {},
@@ -106,15 +122,46 @@ export default {
           path: ""
         }
       ],
+      usercontorl: [
+        {
+          title: "我的订单",
+          path: "orderList"
+        },
+        {
+          title: "账号资料",
+          path: "information"
+        },
+        {
+          title: "收货地址",
+          path: "addressList"
+        },
+        {
+          title: "售后服务",
+          path: "support"
+        },
+        {
+          title: "我的优惠",
+          path: "coupon"
+        },
+        {
+          title: "退出",
+          path: "exit"
+        }
+      ],
       flag: false,
       searchList: [],
-      keyword: "",
-      show: false
+      keyword: ""
     };
   },
   computed: {
     cartNum() {
       return this.$store.state.cartNum;
+    },
+    username() {
+      return this.$store.state.username;
+    },
+    show() {
+      return this.$store.state.showCart;
     }
   },
   created() {},
@@ -178,15 +225,22 @@ export default {
         this.show = false;
       }, 200);
     },
-    getUser() {
-      console.log(1);
-      if (localStorage.getItem("user")) {
-      } else {
-        this.$router.push("/login");
+    contorl(path) {
+      if (path === "exit") {
+        localStorage.removeItem("username");
+        this.$store.state.username = "";
       }
+    },
+    getUser() {
+      this.username === "" ? this.$router.push("/login") : "";
+    },
+    showCart(flag) {
+      this.$store.state.showCart = flag;
     }
   },
-  components: {}
+  components: {
+    shopCart
+  }
 };
 </script>
 
@@ -197,6 +251,9 @@ export default {
     width: 100%;
     height: 100px;
     background: black;
+    .icon:hover .iconfont {
+      color: white;
+    }
     .header-top-box {
       padding: 30px 0;
       .logo {
@@ -262,6 +319,9 @@ export default {
     top: 0;
     .header-bottom-box {
       padding: 10px 0;
+      .icon {
+        height: 44px;
+      }
       .icon:hover {
         color: black;
       }
@@ -298,20 +358,77 @@ export default {
       }
     }
   }
+
   .header-control {
     position: absolute;
     right: 0;
     height: 20px;
+
     .icon {
       padding-top: 6px;
-      // overflow: hidden;
       margin-left: 50px;
       color: #999999;
+      position: relative;
+      &:hover {
+        .header-userinfo,
+        .header-cart {
+          top: 40px;
+        }
+      }
+    }
+    .header-userinfo,
+    .header-cart {
+      position: absolute;
+      padding-top: 20px;
+      background: #fff;
+      border: 1px solid #d6d6d6;
+      border-color: rgba(0, 0, 0, 0.08);
+      border-radius: 8px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      z-index: 10;
+    }
+    .header-userinfo {
+      width: 168px;
+      left: -70px;
+      top: -3000px;
+    }
+    .header-cart {
+      top: 40px;
+      display: block;
+      width: 360px;
+      right: 0  ;
+    }
+    .userinfo-img {
+      text-align: center;
+      img {
+        width: 46px;
+        height: 46px;
+      }
+    }
+    .userinfo-name {
+      text-align: center;
+      line-height: 30px;
+      height: 30px;
+      color: #616161;
+      font-size: 12px;
+    }
+    .userinfo-menu {
+      cursor: pointer;
+      text-align: center;
+      position: relative;
+      border-top: 1px solid #f5f5f5;
+      line-height: 44px;
+      height: 44px;
+      color: #616161;
+      font-size: 12px;
+      &:hover {
+        background: #fafafa;
+      }
+    }
+    .iconfont {
       cursor: pointer;
     }
-    .icon:hover {
-      color: white;
-    }
+
     .icon-yonghu {
       font-size: 20px;
       line-height: 28px;
@@ -324,6 +441,7 @@ export default {
     .cart-num {
       overflow: hidden;
       display: inline-block;
+      font-size: 12px;
       width: 20px;
       height: 20px;
       line-height: 20px;

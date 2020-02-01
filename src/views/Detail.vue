@@ -99,9 +99,10 @@ export default {
       }
     },
     addCart(productId) {
-      this.$api.addCart(productId).then(res => {
+      this.$api.addCart(productId,this.saleNum).then(res => {
         if (res.code === 200) {
           this.$store.dispatch("getCart");
+          this.$store.state.showCart=true
         }
       });
     }

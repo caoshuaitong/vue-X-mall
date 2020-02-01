@@ -114,10 +114,11 @@ export default {
     // 参数:
     // productId: 商品id
     // ```
-    addCart(productId) {
+    addCart(productId, count = 1) {
         return service.post(
             '/goods/addCart', {
-                productId
+                productId,
+                count
             })
     },
     // ### 查询购物车

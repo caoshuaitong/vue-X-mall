@@ -6,10 +6,17 @@
       </div>
       <div class="login-title">使用 XMall 账号 登录官网</div>
       <div class="login-input">
-        <Input v-model="username" placeholder="账号" style="width: 350px" />
+        <Input v-model="username" @on-change="changeData" placeholder="账号" style="width: 350px" />
       </div>
       <div class="login-input">
-        <Input v-model="passwd" type="password" password placeholder="密码" style="width: 350px" />
+        <Input
+          v-model="passwd"
+          @on-change="changeData"
+          type="password"
+          password
+          placeholder="密码"
+          style="width: 350px"
+        />
       </div>
       <div
         id="vaptchaContainer"
@@ -27,7 +34,7 @@
       </div>
       <div class="login-other">
         <div>
-          <Checkbox v-model="flag">记住密码</Checkbox>
+          <Checkbox v-model="flagSave">记住密码</Checkbox>
         </div>
         <div class="login-link">
           <span>
@@ -42,7 +49,7 @@
         <Button class="btn" :class="flag?'submit':'not-allowed'" @click="submit">登录</Button>
       </div>
       <div class="btn-box">
-        <Button class="btn" @click="submit">返回</Button>
+        <Button class="btn" @click="$router.go(-1)">返回</Button>
       </div>
       <div class="support-more">
         其它账号登录：
@@ -62,8 +69,7 @@ export default {
     return {
       username: "",
       passwd: "",
-      repasswd: "",
-      checked: false,
+      flagSave: false,
       checkVaptcha: false,
       flag: false
     };
@@ -71,6 +77,12 @@ export default {
   computed: {},
   created() {},
   mounted() {
+    if (localStorage.getItem("userinfo")) {
+      let obj = JSON.parse(localStorage.getItem("userinfo"));
+      this.username = obj.username;
+      this.passwd = obj.passwd;
+      this.flagSave = true;
+    }
     let _this = this;
     this.vaptcha(_this);
   },
@@ -114,7 +126,55 @@ export default {
         );
       });
     },
-    submit() {},
+    changeData() {
+      if (this.username !== "" && this.passwd !== "" && this.checkVaptcha) {
+        this.flag = true;
+      }
+    },
+    submit() {
+      if (this.flag) {
+        let userCheck = /^[a-zA-Z0-9_-]{4,16}$/;
+        let passCheck = /^[a-zA-Z0-9_-]{4,16}$/;
+        if (!userCheck.test(this.username)) {
+          this.$Message.error(
+            "用户名错误，4到16位（字母，数字，下划线，减号）"
+          );
+          return;
+        }
+        if (!passCheck.test(this.passwd)) {
+          this.$Message.error(
+            "密码错误，最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符"
+          );
+          return;
+        }
+        //保存密码等操作
+        if (this.flagSave) {
+          localStorage.setItem(
+            "userinfo",
+            JSON.stringify({
+              username: this.username,
+              passwd: this.passwd
+            })
+          );
+        } else {
+          if (localStorage.getItem("userinfo")) {
+            localStorage.removeItem("userinfo");
+          }
+        }
+        this.$api.login(this.username, this.passwd).then(res => {
+          if (res.code === 200) {
+            this.$Message.success(res.msg);
+            localStorage.setItem("username", this.username);
+            this.$router.push("/");
+          } else {
+            this.$Message.error(res.msg);
+          }
+        });
+      } else {
+        this.$Message.warning("请补全信息再点击登录");
+      }
+    },
+    //忘记密码
     forget() {
       let nodesc = false;
       this.$Notice.warning({
@@ -122,11 +182,12 @@ export default {
         desc: nodesc ? "" : "不可能给你找回密码的! "
       });
     },
+    //底部链接
     support() {
       let nodesc = false;
       this.$Notice.warning({
         title: "功能开发中...",
-        desc: nodesc ? "" : "不可能给你找回密码的! "
+        desc: nodesc ? "" : "想什么哦，不可能开发的! "
       });
     }
   },
