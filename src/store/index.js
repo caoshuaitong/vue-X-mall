@@ -24,6 +24,7 @@ export default new Vuex.Store({
                     res.data.map(item => {
                         num += item.count
                         sum += item.count * item.salePrice
+                        item.checked = true
                     })
                     state.cartSum = sum
                     state.cartNum = num

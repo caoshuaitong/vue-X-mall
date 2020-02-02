@@ -13,11 +13,11 @@
             v-model="keyword"
             @on-change="search(keyword)"
             @on-blur="onBlur"
-            @on-focus="show=true"
+            @on-focus="showResult=true"
             placeholder="请输入商品信息"
             style="width: auto"
           />
-          <div class="search-result" v-if="searchList.length>0&&show">
+          <div class="search-result" v-if="searchList.length>0&&showResult">
             <div
               v-for="item in searchList"
               :key="item.id"
@@ -48,7 +48,12 @@
               </ul>
             </div>
           </div>
-          <div class="icon" @mouseenter="showCart(true)" @mouseleave="showCart(false)">
+          <div
+            class="icon"
+            @click="goCart"
+            @mouseenter="showCart(true)"
+            @mouseleave="showCart(false)"
+          >
             <i class="iconfont icon-gouwuche"></i>
             <div class="cart-num" :class="cartNum>0?'cart-num-red':''">{{cartNum}}</div>
             <shopCart v-show="show" class="header-cart" />
@@ -56,8 +61,8 @@
         </div>
       </div>
     </div>
-    <div v-if="flag" style="height:60px;"></div>
-    <div :class="flag?'inFixed':'inTop'" class="header-bottom">
+    <div v-if="flag&&$route.path!=='/shopCart'" style="height:60px;"></div>
+    <div v-if="$route.path!=='/shopCart'" :class="flag?'inFixed':'inTop'" class="header-bottom">
       <div ref="headerBottom" class="header-bottom-box flex xm-center">
         <ul class="header-nav flex">
           <li
@@ -150,7 +155,8 @@ export default {
       ],
       flag: false,
       searchList: [],
-      keyword: ""
+      keyword: "",
+      showResult: false
     };
   },
   computed: {
@@ -180,9 +186,16 @@ export default {
   watch: {
     //判断flag状态改变control元素的位置
     flag(val) {
-      if (val) {
-        this.$refs.headerBottom.append(this.$refs.control);
-      } else {
+      if (this.$refs.headerBottom) {
+        if (val) {
+          this.$refs.headerBottom.append(this.$refs.control);
+        } else {
+          this.$refs.headerTop.append(this.$refs.control);
+        }
+      }
+    },
+    $route(val) {
+      if (val.path === "/shopCart") {
         this.$refs.headerTop.append(this.$refs.control);
       }
     }
@@ -236,6 +249,11 @@ export default {
     },
     showCart(flag) {
       this.$store.state.showCart = flag;
+    },
+    goCart() {
+      this.username === ""
+        ? this.$router.push("/login")
+        : this.$router.push("/shopCart");
     }
   },
   components: {
@@ -396,7 +414,7 @@ export default {
       top: 40px;
       display: block;
       width: 360px;
-      right: 0  ;
+      right: 0;
     }
     .userinfo-img {
       text-align: center;

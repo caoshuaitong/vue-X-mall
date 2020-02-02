@@ -13,10 +13,10 @@
               </div>
               <div class="saleinfo">
                 <span class="salePrice">￥{{item.salePrice.toFixed(2)}}</span>
-                <span class="count">x  {{item.count}}</span>
+                <span class="count">x {{item.count}}</span>
               </div>
             </div>
-            <div class="each-del" @click="delCart(item._id)">
+            <div class="each-del" @click.stop="delCart(item._id)">
               <i class="iconfont icon-shan_chu"></i>
             </div>
           </div>

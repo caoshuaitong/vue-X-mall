@@ -23,24 +23,7 @@
         </div>
         <div class="getNum">
           <span>数量</span>
-          <i
-            class="iconfont icon-jian"
-            :class="saleNum===1?'not-allowed':'pointer'"
-            @click="changeNum('down')"
-            onselectstart="return false;"
-          ></i>
-          <div class="num-input">
-            <input type="text" v-model="saleNum" maxlength="2" v-if="!show" />
-            <ul :class="show>0?'showUp':show<0?'showDown':''" class="num-show">
-              <li v-for="num in 3" :key="num.id">{{Number(saleNum)+num-2}}</li>
-            </ul>
-          </div>
-          <i
-            class="iconfont icon-plus-"
-            :class="saleNum===100?'not-allowed':'pointer'"
-            @click="changeNum('up')"
-            onselectstart="return false;"
-          ></i>
+          <xm-steper :saleNum.sync="saleNum" />
         </div>
         <div class="btn-group">
           <Button class="btn" type="primary" @click="addCart(productList.productId)">加入购物车</Button>
@@ -56,6 +39,7 @@
 </template>
 
 <script>
+import xmSteper from "../components/common/XmSteper";
 export default {
   name: "Detail",
   props: {},
@@ -82,32 +66,17 @@ export default {
     changeShowImg(item) {
       this.ShowImg = item;
     },
-    changeNum(item) {
-      if (item === "up" && this.saleNum < 100) {
-        this.show = 1;
-        setTimeout(() => {
-          this.saleNum++;
-          this.show = 0;
-        }, 200);
-      }
-      if (item === "down" && this.saleNum > 1) {
-        this.show = -1;
-        setTimeout(() => {
-          this.saleNum--;
-          this.show = 0;
-        }, 200);
-      }
-    },
+
     addCart(productId) {
-      this.$api.addCart(productId,this.saleNum).then(res => {
+      this.$api.addCart(productId, this.saleNum).then(res => {
         if (res.code === 200) {
           this.$store.dispatch("getCart");
-          this.$store.state.showCart=true
+          this.$store.state.showCart = true;
         }
       });
     }
   },
-  components: {}
+  components: { xmSteper }
 };
 </script>
 
@@ -179,65 +148,8 @@ export default {
       border-top: 1px solid #ebebeb;
       display: flex;
       line-height: 36px;
-      .not-allowed {
-        cursor: not-allowed;
-      }
-      .pointer {
-        cursor: pointer;
-      }
-      .iconfont {
-      }
-
       span {
-        padding-right: 20px;
-        color: #8d8d8d;
-      }
-      .num-input {
-        position: relative;
-        overflow: hidden;
-        width: 40px;
-        margin: 1px;
-        input {
-          position: absolute;
-          text-align: center;
-          width: 40px;
-          outline: none;
-          border: none;
-          color: #686767;
-          z-index: 2;
-          left: 0;
-          top: 0;
-        }
-        .num-show {
-          width: 40px;
-          line-height: 36px;
-          position: absolute;
-          text-align: center;
-          left: 0;
-          top: -36px;
-        }
-        .showUp {
-          animation: up 0.2s;
-        }
-        @keyframes up {
-          from {
-            transform: translateY(0);
-          }
-          to {
-            transform: translateY(-36px);
-          }
-        }
-        .showDown {
-          animation: down 0.2s;
-        }
-        @keyframes down {
-          from {
-            transform: translateY(0);
-          }
-          to {
-            transform: translateY(36px);
-          }
-        }
+        margin-right: 10px;
       }
     }
     .btn-group {

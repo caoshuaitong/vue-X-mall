@@ -156,7 +156,7 @@ export default {
     // 2.count: 数量
     // ```
     editCart(productId, count) {
-        return service.get(
+        return service.post(
             '/goods/editCart', {
                 productId,
                 count
