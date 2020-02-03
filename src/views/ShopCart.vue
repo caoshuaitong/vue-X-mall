@@ -55,7 +55,7 @@
               <div class="pay-msg">应付总额不含运费</div>
             </div>
             <div>
-              <Button type="primary" class="btn">现在结算</Button>
+              <Button type="primary" class="btn" @click="goPayMent()">现在结算</Button>
             </div>
           </div>
         </div>
@@ -146,6 +146,9 @@ export default {
           });
         }
       });
+    },
+    goPayMent() {
+      this.$router.push("/payMent");
     }
   },
   components: {

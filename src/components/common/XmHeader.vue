@@ -61,8 +61,12 @@
         </div>
       </div>
     </div>
-    <div v-if="flag&&$route.path!=='/shopCart'" style="height:60px;"></div>
-    <div v-if="$route.path!=='/shopCart'" :class="flag?'inFixed':'inTop'" class="header-bottom">
+    <div v-if="!($route.path==='/shopCart'||$route.path==='/payMent')&&flag" style="height:60px;"></div>
+    <div
+      v-if="!($route.path==='/shopCart'||$route.path==='/payMent')"
+      :class="flag?'inFixed':'inTop'"
+      class="header-bottom"
+    >
       <div ref="headerBottom" class="header-bottom-box flex xm-center">
         <ul class="header-nav flex">
           <li
@@ -195,7 +199,7 @@ export default {
       }
     },
     $route(val) {
-      if (val.path === "/shopCart") {
+      if (val.path === "/shopCart" || val.path === "/payMent") {
         this.$refs.headerTop.append(this.$refs.control);
       }
     }
