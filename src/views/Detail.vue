@@ -27,7 +27,7 @@
         </div>
         <div class="btn-group">
           <Button class="btn" type="primary" @click="addCart(productList.productId)">加入购物车</Button>
-          <Button class="btn" @click="buyNow()">现在购买</Button>
+          <Button class="btn" @click="buyNow">现在购买</Button>
         </div>
       </div>
     </div>
@@ -54,19 +54,25 @@ export default {
   computed: {},
   created() {},
   mounted() {
-    let id = this.$route.params.id;
+    let id = this.$route.query.id;
     this.$api.searchId(id).then(res => {
       this.productList = res.data.result;
       this.ShowImg = this.productList.productImageBig;
       this.productList.salePrice = this.productList.salePrice.toFixed(2);
     });
   },
-  watch: {},
+  watch: {
+    $route(val) {
+      this.$router.go(0);
+    }
+  },
   methods: {
     changeShowImg(item) {
       this.ShowImg = item;
     },
-
+    buyNow() {
+      this.$router.push("/payMent");
+    },
     addCart(productId) {
       this.$api.addCart(productId, this.saleNum).then(res => {
         if (res.code === 200) {

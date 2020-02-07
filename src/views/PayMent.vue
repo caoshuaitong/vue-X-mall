@@ -8,7 +8,7 @@
           v-for="(item,index) in addressList"
           :key="item.id"
           :class="index===defaultAdd?'defaultColor':''"
-          @click="changeDefaultAdd(index)"
+          @click="changeDefaultAdd(item,index)"
         >
           <div class="each-main">
             <div class="add-default" v-if="index===defaultAdd">
@@ -75,9 +75,9 @@
         <div class="flex">
           <div class="payable">
             应付总额:
-            <span class="pay-num">￥{{checkedSum}}</span>
+            <span class="pay-num">￥{{checkedSum.toFixed(2)}}</span>
           </div>
-          <Button type="primary" class="btn">提交订单</Button>
+          <Button type="primary" class="btn" @click="goOrder">提交订单</Button>
         </div>
       </div>
     </div>
@@ -136,9 +136,12 @@ export default {
           this.addressList = res.data;
           this.loading = false;
           this.flagAdd = false;
+          this.$store.state.address = res.data[0];
           res.data.map((item, index) => {
             if (item.isDefault) {
               this.defaultAdd = index;
+              this.$store.state.address = item;
+              console.log(this.$store.state.address);
             }
           });
         }
@@ -187,7 +190,8 @@ export default {
           });
       }
     },
-    changeDefaultAdd(index) {
+    changeDefaultAdd(item, index) {
+      this.$store.state.address = item;
       this.defaultAdd = index;
     },
     deleteAddress(id) {
@@ -196,6 +200,9 @@ export default {
           this.getList();
         }
       });
+    },
+    goOrder() {
+      this.$router.push("/order");
     }
   },
   components: {}
@@ -388,7 +395,7 @@ export default {
         color: #d44d44;
         text-align: center;
         display: inline-block;
-        width: 35px;
+        width: 60px;
         font-weight: 800;
       }
     }

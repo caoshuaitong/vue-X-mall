@@ -28,7 +28,7 @@ const routes = [{
     },
     {
         //详情
-        path: '/detail/:id',
+        path: '/detail',
         component: Home,
         children: [{
             path: '',
@@ -68,6 +68,17 @@ const routes = [{
             name: 'order',
             component: () =>
                 import ('../views/Order')
+        }]
+    },
+    {
+        //订单
+        path: '/contorl',
+        component: Home,
+        children: [{
+            path: '',
+            name: 'contorl',
+            component: () =>
+                import ('../views/Contorl')
         }]
     },
     {

@@ -9,7 +9,7 @@
             </div>
             <div class="each-right">
               <div class="productName">
-                <a href="javascript:0;" @click="$godetail(item.productId)">{{item.productName}}</a>
+                <a href="javascript:0;" @click.stop="$godetail(item.productId)">{{item.productName}}</a>
               </div>
               <div class="saleinfo">
                 <span class="salePrice">￥{{item.salePrice.toFixed(2)}}</span>

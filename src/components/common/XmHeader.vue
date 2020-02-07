@@ -54,29 +54,29 @@
             @mouseenter="showCart(true)"
             @mouseleave="showCart(false)"
           >
-            <i class="iconfont icon-gouwuche"></i>
+            <i ref="cart" class="iconfont icon-gouwuche"></i>
             <div class="cart-num" :class="cartNum>0?'cart-num-red':''">{{cartNum}}</div>
             <shopCart v-show="show" class="header-cart" />
           </div>
         </div>
       </div>
     </div>
-    <div v-if="!($route.path==='/shopCart'||$route.path==='/payMent')&&flag" style="height:60px;"></div>
     <div
-      v-if="!($route.path==='/shopCart'||$route.path==='/payMent')"
-      :class="flag?'inFixed':'inTop'"
-      class="header-bottom"
+      v-if="$route.name!=='shopCart'&&$route.name!=='payMent'&&$route.name!=='contorl'&&$route.name!=='order'"
     >
-      <div ref="headerBottom" class="header-bottom-box flex xm-center">
-        <ul class="header-nav flex">
-          <li
-            class="nav-each"
-            v-for="item in nav"
-            :key="item.id"
-            :class="item.path===$route.path?'nav-weight':''"
-            @click="jump(item.path)"
-          >{{item.name}}</li>
-        </ul>
+      <div v-if="flag" style="height:60px;"></div>
+      <div :class="flag?'inFixed':'inTop'" class="header-bottom">
+        <div ref="headerBottom" class="header-bottom-box flex xm-center">
+          <ul class="header-nav flex">
+            <li
+              class="nav-each"
+              v-for="item in nav"
+              :key="item.id"
+              :class="item.path===$route.path?'nav-weight':''"
+              @click="jump(item.path)"
+            >{{item.name}}</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -229,12 +229,12 @@ export default {
     },
     //搜索跳转
     godetail(id) {
-      if (this.$route.params) {
+      if (this.$route.query) {
         setTimeout(() => {
           this.$router.go(0);
         }, 20);
       }
-      this.$router.push({ name: "detail", params: { id: id } });
+      this.$router.push({ name: "detail", query: { id: id } });
     },
     //搜索失去焦点
     onBlur() {
@@ -246,6 +246,8 @@ export default {
       if (path === "exit") {
         localStorage.removeItem("username");
         this.$store.state.username = "";
+      } else if (path !== this.$route.query) {
+        this.$router.push({ name: "contorl", query: { id: path } });
       }
     },
     getUser() {

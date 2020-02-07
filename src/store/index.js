@@ -9,7 +9,9 @@ export default new Vuex.Store({
         username: '',
         goodsList: [],
         cartSum: 0,
-        showCart: false
+        showCart: false,
+        address: {},
+        cart: {}
     },
     mutations: {},
     actions: {
