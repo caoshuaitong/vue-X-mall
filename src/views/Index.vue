@@ -34,7 +34,6 @@ export default {
       this.$api.getHome().then(res => {
         if (res.code === 200) {
           this.data = res.data;
-          console.log(res.data);
         }
       });
     }

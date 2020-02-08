@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <transition @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+      <div v-show="cart.show" class="cartPic">
+        <img :src="cart.pic" alt />
+      </div>
+    </transition>
     <Modal v-model="flag" title="长时间未操作" @on-ok="asyncOK">
       <p>由于您5分钟未操作，先已清除您的登录状态，点击确定重新登录</p>
     </Modal>
@@ -16,7 +21,8 @@ export default {
   props: {},
   data() {
     return {
-      flag: false
+      flag: false,
+      show: false
     };
   },
   components: {
@@ -50,6 +56,28 @@ export default {
     },
     asyncOK() {
       this.$router.push("/login");
+    },
+    //动画开始
+    beforeEnter(el) {
+      el.style.transform = "translate(0,0)";
+      el.style.top = `${this.cart.clientY}px`;
+      el.style.left = `${this.cart.clientX}px`;
+    },
+    enter(el, done) {
+      //获取购物车图标的位置
+      let x = 0,
+        y = 0;
+      let el1 = document.querySelector(".header-top-box");
+      x = el1.offsetLeft + el1.offsetWidth - 40;
+      y = el1.offsetTop + el1.offsetHeight / 2 - 5;
+      el.style.transform = `translate(${x - this.cart.clientX}px,${y -
+        this.cart.clientY}px)`;
+      el.style.transition = "all 1s ease";
+      done();
+    },
+    //动画结束令show=false
+    afterEnter() {
+      this.$store.state.cart.show = false;
     }
   },
   mounted() {
@@ -65,11 +93,25 @@ export default {
     this.$store.dispatch("getCart");
   },
   watch: {},
-  computed: {}
+  computed: {
+    cart() {
+      return this.$store.state.cart;
+    }
+  }
 };
 </script>
 
 <style scoped lang='scss'>
+.cartPic {
+  position: fixed;
+  z-index: 999;
+  width: 20px;
+  height: 20px;
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
 .container {
   background: #ededed;
 }

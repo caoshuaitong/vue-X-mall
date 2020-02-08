@@ -26,7 +26,11 @@
           <xm-steper :saleNum.sync="saleNum" />
         </div>
         <div class="btn-group">
-          <Button class="btn" type="primary" @click="addCart(productList.productId)">加入购物车</Button>
+          <Button
+            class="btn"
+            type="primary"
+            @click="addCart(productList.productId,$event,productList.picUrl?productList.picUrl:productList.productImageBig)"
+          >加入购物车</Button>
           <Button class="btn" @click="buyNow">现在购买</Button>
         </div>
       </div>
@@ -73,13 +77,21 @@ export default {
     buyNow() {
       this.$router.push("/payMent");
     },
-    addCart(productId) {
-      this.$api.addCart(productId, this.saleNum).then(res => {
-        if (res.code === 200) {
-          this.$store.dispatch("getCart");
-          this.$store.state.showCart = true;
-        }
-      });
+    addCart(productId, eve, pic) {
+      if (this.$store.state.cart.show === false) {
+        this.$api.addCart(productId, this.saleNum).then(res => {
+          if (res.code === 200) {
+            this.$store.dispatch("getCart");
+            this.$store.state.showCart = true;
+            this.$store.state.cart = {
+              show: true,
+              clientX: eve.clientX,
+              clientY: eve.clientY,
+              pic: pic
+            };
+          }
+        });
+      }
     }
   },
   components: { xmSteper }

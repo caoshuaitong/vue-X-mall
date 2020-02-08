@@ -1,12 +1,17 @@
 <template>
   <div class="pro-each">
     <img :src="item.picUrl?item.picUrl:item.productImageBig" alt />
-    <div class="pro-name">{{item.productName}}</div>
+    <div class="pro-name" @click="ende">{{item.productName}}</div>
     <div class="pro-sub">{{item.subTitle}}</div>
     <div class="pro-bottom">
       <div class="btn-group">
         <Button class="btn" @click="$godetail(item.productId)">查看详情</Button>
-        <Button class="btn" type="primary" @click="addCart(item.productId)">加入购物车</Button>
+        <Button
+          class="btn"
+          type="primary"
+          ref="addCarts"
+          @click="addCart(item.productId,$event,item.picUrl?item.picUrl:item.productImageBig)"
+        >加入购物车</Button>
       </div>
       <div class="pro-price">￥{{item.salePrice.toFixed(2)}}</div>
     </div>
@@ -30,13 +35,25 @@ export default {
   mounted() {},
   watch: {},
   methods: {
-    addCart(productId) {
-      this.$api.addCart(productId).then(res => {
-        if (res.code === 200) {
-          this.$store.dispatch("getCart");
-           this.$store.state.showCart=true
-        }
-      });
+    addCart(productId, eve, pic) {
+      if (this.$store.state.cart.show === false) {
+        console.log(1);
+        this.$api.addCart(productId).then(res => {
+          if (res.code === 200) {
+            this.$store.dispatch("getCart");
+            this.$store.state.showCart = true;
+            this.$store.state.cart = {
+              show: true,
+              clientX: eve.clientX,
+              clientY: eve.clientY,
+              pic: pic
+            };
+          }
+        });
+      }
+    },
+    ende(el) {
+      console.log(el);
     }
   },
   components: {},

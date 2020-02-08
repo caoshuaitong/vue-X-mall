@@ -54,7 +54,7 @@
             @mouseenter="showCart(true)"
             @mouseleave="showCart(false)"
           >
-            <i ref="cart" class="iconfont icon-gouwuche"></i>
+            <i id="cart" class="iconfont icon-gouwuche"></i>
             <div class="cart-num" :class="cartNum>0?'cart-num-red':''">{{cartNum}}</div>
             <shopCart v-show="show" class="header-cart" />
           </div>

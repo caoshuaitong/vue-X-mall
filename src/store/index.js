@@ -11,7 +11,10 @@ export default new Vuex.Store({
         cartSum: 0,
         showCart: false,
         address: {},
-        cart: {}
+        cart: {
+            show: false
+        }
+
     },
     mutations: {},
     actions: {
